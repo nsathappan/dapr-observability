@@ -1,0 +1,9 @@
+apiVersion: dapr.io/v1alpha1 
+kind: Configuration 
+metadata: 
+  name: daprConfig 
+spec: 
+  tracing: 
+    samplingRate: "1.0" 
+    zipkin: 
+      endpointAddress: "https://dc.services.visualstudio.com/v2/track" 

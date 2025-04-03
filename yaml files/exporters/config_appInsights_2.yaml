@@ -1,0 +1,17 @@
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: appconfig
+spec:
+  tracing:
+    enabled: true
+    exporter:
+      type: azure-appinsights
+      config:
+        instrumentationKey: <<YOUR INSTRUMENTATION KEY>>
+        endpoint: https://eastus-8.in.applicationinsights.azure.com/
+components:
+  exporters:
+    azure-appinsights:
+      type: exporters.azure.appinsights
+      version: v1
