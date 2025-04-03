@@ -15,7 +15,7 @@ namespace App1.Controllers
         [HttpGet("Secrets/{key}")]
         public async Task<IActionResult> GetSecret([FromServices] DaprClient daprClient, string key)
         {
-            var secrets = await daprClient.GetSecretAsync("keyvault-secrets-store", key);
+            var secrets = await daprClient.GetSecretAsync("local-secrets-store", key);
             return Ok(secrets.First().Value ?? "Key not found");
 
         }
