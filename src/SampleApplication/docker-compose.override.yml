@@ -1,0 +1,14 @@
+services:
+  app1Service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=41000
+    ports:
+      - "41000"
+  
+  app2Service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=41001
+    ports:
+      - "41001"

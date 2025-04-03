@@ -1,0 +1,63 @@
+services:
+  app1Service:
+    image: ${DOCKER_REGISTRY-}app1
+    build:
+      context: .
+      dockerfile: App1/Dockerfile
+    ports:
+      - "40000:41000"
+
+  app1Service-sidecar:
+    image: "daprio/daprd:latest"
+    command: [ 
+      "./daprd",
+      "-app-id",
+      "app1-Service",
+      "-app-port", "41000",
+      "-components-path", "/components",
+      "--config", "/components/config.yaml",
+      "-log-level", "debug"
+    ]
+    volumes:
+      - "./components/:/components"
+    depends_on: 
+      - app1Service
+    network_mode: "service:app1Service"
+
+  app2Service:
+    image: ${DOCKER_REGISTRY-}app2
+    build:
+      context: .
+      dockerfile: App2/Dockerfile
+    ports:
+      - "40001:41001"
+  
+  app2Service-sidecar:
+    image: "daprio/daprd:latest"
+    command: [ 
+      "./daprd",
+      "-app-id",
+      "app2-Service",
+      "-app-port", "41001",
+      "-components-path", "/components",
+      "--config", "/components/config.yaml",
+      "-log-level", "debug"
+    ]
+    volumes:
+      - "./components/:/components"
+    depends_on: 
+      - app2Service
+    network_mode: "service:app2Service"
+
+  otel:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/configs/otel-collector-config.yaml"]
+    volumes:
+      - ./configs:/configs:ro
+      - ./output:/etc/output:rw # Store the logs-
+    ports:
+      - "8888:8888"   # Prometheus metrics exposed by the collector
+      - "8889:8889"   # Prometheus exporter metrics
+      - "4317:4317"   # OTLP receiver
+    networks:
+      - nextgenum-dapr
